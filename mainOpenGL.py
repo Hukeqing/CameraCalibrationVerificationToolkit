@@ -26,9 +26,9 @@ window = GWindow("demo", SCR_WIDTH, SCR_HEIGHT, camera, keep_mouse_stay=False)
 
 
 # image_size = (1920, 1080)
-# light_color = (1.0, 1.0, 1.0)
-# hand_color = (0.9, 0.9, 0.9)
-# light_position = (-1000, -700, 1000)
+light_color = (1.0, 1.0, 1.0)
+hand_color = (0.9, 0.9, 0.9)
+light_position = (-1000, -700, 1000)
 
 # model_position = [
 #     glm.vec3(1.0, 1.0, 1.0),
@@ -89,6 +89,13 @@ def init():
     bg_shader_program = ShaderProgram("resources/shaders/bg_shader.vs", "resources/shaders/bg_shader.fg")
     bg_shader_program.init()
 
+    global hand_shader_program
+    hand_shader_program = ShaderProgram("resources/shaders/hand_shader.vs", "resources/shaders/hand_shader.fg")
+    hand_shader_program.init()
+
+    global hand_model
+    hand_model = ModelFromExport("resources/models/hand.obj", vertex_format="VN")
+
     glEnable(GL_DEPTH_TEST)
 
 
@@ -107,6 +114,23 @@ def render_background_image(bg_model):
     bg_shader_program.un_use()
     bg_model.draw(bg_shader_program, draw_type=GL_TRIANGLES)
     # glEnable(GL_DEPTH_TEST)
+
+    hand_shader_program.use()
+    hand_shader_program.set_matrix("projection", glm.value_ptr(projection))
+    hand_shader_program.set_matrix("view", glm.value_ptr(view))
+    m = glm.mat4(1.0)
+    m = glm.translate(m, glm.vec3(0, 0, 5))
+    m = glm.rotate(m, glm.radians(-90), glm.vec3(1, 0, 0))
+    # m = glm.rotate(m, glm.radians(model_position[1][1][0]), model_position[1][1][1])
+    # m = glm.rotate(m, glm.radians(model_position[1][2][0]), model_position[1][2][1])
+    m = glm.scale(m, glm.vec3(0.02, 0.02, 0.02))
+    hand_shader_program.set_matrix("model", glm.value_ptr(m))
+    hand_shader_program.set_uniform_3f("lightColor", light_color)
+    hand_shader_program.set_uniform_3f("lightPos", light_position)
+    hand_shader_program.set_uniform_3f("handColor", hand_color)
+    hand_shader_program.un_use()
+
+    hand_model.draw(hand_shader_program, draw_type=GL_TRIANGLES)
 
 
 def render():
@@ -131,7 +155,6 @@ def render():
     if data.bg_model_right.flag:
         data.bg_model_right.Model.change_mesh(data.bg_model_right.path)
         data.bg_model_right.flag = False
-
 
 def main_render():
     init()

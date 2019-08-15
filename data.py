@@ -5,8 +5,8 @@ class bg_model:
         self.Model = None
 
 
-bg_model_left = bg_model('source/leftCamera.png')
-bg_model_right = bg_model('source/rightCamera.png')
+bg_model_left = bg_model('resources/images/leftCamera.png')
+bg_model_right = bg_model('resources/images/rightCamera.png')
 
 
 def change_render(new_path, left=True):
