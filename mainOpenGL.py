@@ -93,7 +93,7 @@ def init():
 
 
 def render_background_image(bg_model):
-    glDisable(GL_DEPTH_TEST)
+    # glDisable(GL_DEPTH_TEST)
     bg_shader_program.use()
     m = glm.mat4(1.0)
     m = glm.scale(m, glm.vec3(2))
@@ -106,7 +106,7 @@ def render_background_image(bg_model):
     bg_shader_program.set_matrix("projection", glm.value_ptr(projection))
     bg_shader_program.un_use()
     bg_model.draw(bg_shader_program, draw_type=GL_TRIANGLES)
-    glEnable(GL_DEPTH_TEST)
+    # glEnable(GL_DEPTH_TEST)
 
 
 def render():
@@ -133,7 +133,7 @@ def render():
         data.bg_model_right.flag = False
 
 
-def mainrender():
+def main_render():
     init()
     window.set_render_function(render)
     glEnable(GL_BLEND)
@@ -147,4 +147,4 @@ def mainrender():
 
 
 if __name__ == '__main__':
-    mainrender()
+    main_render()

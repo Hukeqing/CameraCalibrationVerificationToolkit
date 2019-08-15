@@ -130,3 +130,7 @@ last*.*
 *.whl
 *.jpg
 source/
+*.obj
+*.jpg
+*.png
+*.mtl

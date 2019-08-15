@@ -63,17 +63,18 @@ class GWindow:
         # if self.keep_mouse_stay:
         #     glutEntryFunc(self.io_process.mouse_state)
 
-    def process_input(self, window, delta_time):
-        if (glfw.get_key(window, glfw.KEY_ESCAPE) == glfw.PRESS):
+    @staticmethod
+    def process_input(window):
+        if glfw.get_key(window, glfw.KEY_ESCAPE) == glfw.PRESS:
             glfw.set_window_should_close(window, True)
-        if (glfw.get_key(window, glfw.KEY_W) == glfw.PRESS):
-            self.camera.process_keyboard(CAMERA_MOVEMENT.FORWARD, delta_time)
-        if (glfw.get_key(window, glfw.KEY_S) == glfw.PRESS):
-            self.camera.process_keyboard(CAMERA_MOVEMENT.BACKWARD, delta_time)
-        if (glfw.get_key(window, glfw.KEY_A) == glfw.PRESS):
-            self.camera.process_keyboard(CAMERA_MOVEMENT.LEFT, delta_time)
-        if (glfw.get_key(window, glfw.KEY_D) == glfw.PRESS):
-            self.camera.process_keyboard(CAMERA_MOVEMENT.RIGHT, delta_time)
+        # if (glfw.get_key(window, glfw.KEY_W) == glfw.PRESS):
+        #     self.camera.process_keyboard(CAMERA_MOVEMENT.FORWARD, delta_time)
+        # if (glfw.get_key(window, glfw.KEY_S) == glfw.PRESS):
+        #     self.camera.process_keyboard(CAMERA_MOVEMENT.BACKWARD, delta_time)
+        # if (glfw.get_key(window, glfw.KEY_A) == glfw.PRESS):
+        #     self.camera.process_keyboard(CAMERA_MOVEMENT.LEFT, delta_time)
+        # if (glfw.get_key(window, glfw.KEY_D) == glfw.PRESS):
+        #     self.camera.process_keyboard(CAMERA_MOVEMENT.RIGHT, delta_time)
 
     def mouse_callback(self, window, xpos, ypos):
         if self.first_mouse:
@@ -95,7 +96,7 @@ class GWindow:
 
     def draw_function(self):
         current_frame = glfw.get_time()
-        self.process_input(self.window, self.delta_time)
+        self.process_input(self.window)
 
         self.render()
 
