@@ -53,6 +53,7 @@ class GWindow:
         # glfw.set_cursor_pos_callback(self.window, self.mouse_callback)
         glfw.set_scroll_callback(self.window, self.scroll_callback)
         # glfw.set_framebuffer_size_callback(self.window, self.reshape)
+
         # glutDisplayFunc(self.draw_function)
         # glutIdleFunc(self.draw_function)
         # glutReshapeFunc(self.reshape)
@@ -63,8 +64,7 @@ class GWindow:
         # if self.keep_mouse_stay:
         #     glutEntryFunc(self.io_process.mouse_state)
 
-    @staticmethod
-    def process_input(window):
+    def process_input(self, window, delta_time):
         if glfw.get_key(window, glfw.KEY_ESCAPE) == glfw.PRESS:
             glfw.set_window_should_close(window, True)
         # if (glfw.get_key(window, glfw.KEY_W) == glfw.PRESS):
@@ -96,7 +96,7 @@ class GWindow:
 
     def draw_function(self):
         current_frame = glfw.get_time()
-        self.process_input(self.window)
+        self.process_input(self.window, self.delta_time)
 
         self.render()
 

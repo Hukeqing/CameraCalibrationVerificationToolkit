@@ -1,3 +1,5 @@
+import time
+
 from OpenGL.GL import *
 import numpy as np
 from GEngine.shader import ShaderProgram
@@ -92,7 +94,8 @@ def init():
     light_cube = Model([cube_vertices])
 
     glEnable(GL_DEPTH_TEST)
-
+    # glEnable(GL_BLEND)
+    # glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
 def render():
     glClearColor(0, 0, 0, 0.0)

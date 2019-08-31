@@ -24,11 +24,11 @@ camera = Camera3D(glm.vec3(0.0, 0, 30.0))
 # window = GWindow(b"demo", SCR_WIDTH, SCR_HEIGHT, InputProcess(camera), keep_mouse_stay=False)
 window = GWindow("demo", SCR_WIDTH, SCR_HEIGHT, camera, keep_mouse_stay=False)
 
-
 # image_size = (1920, 1080)
 light_color = (1.0, 1.0, 1.0)
 hand_color = (0.9, 0.9, 0.9)
 light_position = (-1000, -700, 1000)
+
 
 # model_position = [
 #     glm.vec3(1.0, 1.0, 1.0),
@@ -155,6 +155,7 @@ def render():
     if data.bg_model_right.flag:
         data.bg_model_right.Model.change_mesh(data.bg_model_right.path)
         data.bg_model_right.flag = False
+
 
 def main_render():
     init()
