@@ -147,7 +147,6 @@ class Mesh:
 
 class Model:
     def __init__(self, meshes, mesh_names=None, indices=None, texture_path=None, vertex_format="VT"):
-        print(1)
         self.meshes = [
             Mesh(o, mesh_names[index] if mesh_names else None,
                  indices[index] if indices and len(indices) > 0 else None,

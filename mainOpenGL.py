@@ -11,6 +11,7 @@ from GEngine.window import GWindow
 import threading
 import OpenGLtkinter
 import data
+import ModelLoad
 
 import time
 
@@ -59,7 +60,7 @@ def init():
     #                1, 1, 0, 1, 1
     #                ], dtype=np.float32)
 
-    scale = 120
+    scale = 50
     img_size = (1920 / scale, 1080 / scale)
     # img_size = (20, 20)
     # img_size = (2, 2)
@@ -94,7 +95,9 @@ def init():
     hand_shader_program.init()
 
     global hand_model
-    hand_model = ModelFromExport("resources/models/hand.obj", vertex_format="VN")
+    v = ModelLoad.load_obj('resources/models/hand.obj')
+    hand_model = Model([v], vertex_format='VN')
+    # hand_model = ModelFromExport("resources/models/hand.obj", vertex_format="VN")
 
     glEnable(GL_DEPTH_TEST)
 
@@ -103,7 +106,7 @@ def render_background_image(bg_model):
     # glDisable(GL_DEPTH_TEST)
     bg_shader_program.use()
     m = glm.mat4(1.0)
-    m = glm.scale(m, glm.vec3(2))
+    # m = glm.scale(m, glm.vec3(2))
     bg_shader_program.set_matrix("model", glm.value_ptr(m))
 
     view = camera.get_view_matrix()
