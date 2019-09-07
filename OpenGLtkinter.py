@@ -1,29 +1,28 @@
 import tkinter
 import data
 
-
-def changeradio():
-    data.change_render(r'D:\PhotoCheck\checkbox\left\left1.png', False)
+cur_radio = None
 
 
-def tkinterwindow():
-    mainwin = tkinter.Tk()
-    mainwin.geometry('200x200')
-    mainwin.title('Test')
-    global curradio
-    curradio = tkinter.IntVar()
-    curradio.set(0)
-    radio1 = tkinter.Radiobutton(mainwin, variable=curradio, text='Cam1-Cam2', value=0, indicatoron=0,
-                                 command=changeradio)
-    radio2 = tkinter.Radiobutton(mainwin, variable=curradio, text='Cam1-Cam3', value=1, indicatoron=0,
-                                 command=changeradio)
-    radio3 = tkinter.Radiobutton(mainwin, variable=curradio, text='Cam1-Cam4', value=2, indicatoron=0,
-                                 command=changeradio)
-    radio1.pack()
-    radio2.pack()
-    radio3.pack()
-    mainwin.mainloop()
+def change_radio():
+    data.change_render(cur_radio.get())
+
+
+def tkinter_window():
+    main_win = tkinter.Tk()
+    main_win.geometry('200x200')
+    main_win.title('Test')
+    global cur_radio
+    cur_radio = tkinter.IntVar()
+    cur_radio.set(0)
+    for index, item in enumerate(data.couple_list):
+        radio = tkinter.Radiobutton(main_win, variable=cur_radio, text=item.left_camera.name + ' - ' + item.right_camera.name, value=index,
+                                    indicatoron=0,
+                                    command=change_radio)
+        radio.pack()
+
+    main_win.mainloop()
 
 
 if __name__ == '__main__':
-    tkinterwindow()
+    tkinter_window()

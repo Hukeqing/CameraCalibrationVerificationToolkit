@@ -30,7 +30,7 @@ class Camera3D:
         return glm.lookAt(self.position, self.position + self.front, self.world_up)
 
     def get_projection(self, window_width, window_height):
-        projection = glm.perspective(glm.radians(self.zoom), window_width * 1.0 / window_height, 0.3, 1000)
+        projection = glm.perspective(glm.radians(self.zoom), window_width * 1.0 / window_height, 0.3, 5000)
         return projection
 
     def process_keyboard(self, direction, deltaTime):
