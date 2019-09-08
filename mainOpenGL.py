@@ -13,6 +13,7 @@ import threading
 import OpenGLtkinter
 import data
 import ModelLoad
+import glfw
 
 SCR_WIDTH = int(1920 * 0.5) * 2
 SCR_HEIGHT = int(1080 * 0.5)
@@ -26,8 +27,14 @@ bg_view = ortho_camera.get_view_matrix()
 window = GWindow("demo", SCR_WIDTH, SCR_HEIGHT, camera, keep_mouse_stay=False)
 
 light_color = (1.0, 1.0, 1.0)
-hand_color = (1, 1, 1)
+hand_color = (1, 0, 0)
 light_position = (-5000, -5000, 5000)
+
+hand_position = glm.vec3(0)
+hand_rotation = glm.vec3(0)
+
+move_speed = 1000
+rotate_speed = 30
 
 img_size = (1920, 1080)
 
@@ -76,13 +83,11 @@ def render_background_image(bg_model, window_width=1920 / 2, window_height=1080 
     hand_shader_program.set_matrix("view", glm.value_ptr(camera_view))
     # hand_shader_program.set_matrix("view", glm.value_ptr(view))
     m = glm.mat4(1.0)
-    m = glm.translate(m, glm.vec3(0, 0, 5))
-    m = glm.rotate(m, glm.radians(-90), glm.vec3(1, 0, 0))
-    m = glm.rotate(m, glm.radians(-90), glm.vec3(0, 1, 0))
-    # m = glm.scale(m, glm.vec3(1000, 1000, 1000))
-    # m = glm.rotate(m, glm.radians(model_position[1][1][0]), model_position[1][1][1])
-    # m = glm.rotate(m, glm.radians(model_position[1][2][0]), model_position[1][2][1])
-    # m = glm.scale(m, glm.vec3(0.02, 0.02, 0.02))
+    m = glm.translate(m, hand_position)
+    m = glm.rotate(m, glm.radians(hand_rotation.x), glm.vec3(1, 0, 0))
+    m = glm.rotate(m, glm.radians(hand_rotation.y), glm.vec3(0, 1, 0))
+    m = glm.rotate(m, glm.radians(hand_rotation.z), glm.vec3(0, 0, 1))
+
     hand_shader_program.set_matrix("model", glm.value_ptr(m))
     hand_shader_program.set_uniform_3f("lightColor", light_color)
     hand_shader_program.set_uniform_3f("lightPos", light_position)
@@ -96,6 +101,7 @@ def render_view(cur_camera: data.Camera, cur_camera_data: data.CameraData):
     camera.position = cur_camera_data.position
 
     tmp = tuple([- i for i in cur_camera_data.rotation])
+    # tmp = tuple(cur_camera_data.rotation)
     view = cv2.Rodrigues(tmp)[0]
     # camera.yaw = cur_camera.camera_data.yaw - 90
     # camera.pitch = cur_camera.camera_data.pitch
@@ -117,6 +123,35 @@ def render():
     glPointSize(5)
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+    global hand_position
+    global hand_rotation
+    if glfw.get_key(window.window, glfw.KEY_A) == glfw.PRESS:
+        hand_position.y += move_speed * window.delta_time
+    if glfw.get_key(window.window, glfw.KEY_D) == glfw.PRESS:
+        hand_position.y -= move_speed * window.delta_time
+    if glfw.get_key(window.window, glfw.KEY_W) == glfw.PRESS:
+        hand_position.x -= move_speed * window.delta_time
+    if glfw.get_key(window.window, glfw.KEY_S) == glfw.PRESS:
+        hand_position.x += move_speed * window.delta_time
+    if glfw.get_key(window.window, glfw.KEY_Q) == glfw.PRESS:
+        hand_position.z -= move_speed * window.delta_time
+    if glfw.get_key(window.window, glfw.KEY_E) == glfw.PRESS:
+        hand_position.z += move_speed * window.delta_time
+
+    if glfw.get_key(window.window, glfw.KEY_J) == glfw.PRESS:
+        hand_rotation.x += move_speed * window.delta_time
+    if glfw.get_key(window.window, glfw.KEY_L) == glfw.PRESS:
+        hand_rotation.x -= move_speed * window.delta_time
+    if glfw.get_key(window.window, glfw.KEY_I) == glfw.PRESS:
+        hand_rotation.y += move_speed * window.delta_time
+    if glfw.get_key(window.window, glfw.KEY_K) == glfw.PRESS:
+        hand_rotation.y -= move_speed * window.delta_time
+    if glfw.get_key(window.window, glfw.KEY_U) == glfw.PRESS:
+        hand_rotation.z += move_speed * window.delta_time
+    if glfw.get_key(window.window, glfw.KEY_O) == glfw.PRESS:
+        hand_rotation.z -= move_speed * window.delta_time
+
     camera = data.couple_list[data.curindex]
     glViewport(0, 0, int(window.window_width / 2), window.window_height)
     render_view(camera.left_camera, camera.left_camera_data)
