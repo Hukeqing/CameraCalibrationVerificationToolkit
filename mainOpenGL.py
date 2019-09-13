@@ -33,12 +33,17 @@ light_position = (-5000, -5000, 5000)
 hand_position = glm.vec3(0)
 hand_rotation = glm.vec3(0)
 
-move_speed = 1000
-rotate_speed = 30
+move_nor_speed = 1000
+move_add_speed = 2000
+move_sub_speed = 500
+
+rotate_nor_speed = 90
+rotate_add_speed = 180
+rotate_sub_speed = 45
 
 img_size = (1920, 1080)
 
-data.init()
+data.init(r'resources\models\data.txt')
 
 
 def init():
@@ -76,7 +81,7 @@ def render_background_image(bg_model, window_width=1920 / 2, window_height=1080 
     bg_shader_program.set_matrix("projection", glm.value_ptr(bg_ortho))
     bg_shader_program.un_use()
     bg_model.draw(bg_shader_program, draw_type=GL_TRIANGLES)
-    # glEnable(GL_DEPTH_TEST)
+    glEnable(GL_DEPTH_TEST)
 
     hand_shader_program.use()
     hand_shader_program.set_matrix("projection", glm.value_ptr(projection))
@@ -126,6 +131,16 @@ def render():
 
     global hand_position
     global hand_rotation
+
+    move_speed = move_nor_speed
+    rotate_speed = rotate_nor_speed
+    if glfw.get_key(window.window, glfw.KEY_LEFT_CONTROL) == glfw.PRESS:
+        move_speed = move_add_speed
+        rotate_speed = rotate_add_speed
+    elif glfw.get_key(window.window, glfw.KEY_LEFT_SHIFT) == glfw.PRESS:
+        move_speed = move_sub_speed
+        rotate_speed = rotate_sub_speed
+
     if glfw.get_key(window.window, glfw.KEY_A) == glfw.PRESS:
         hand_position.y += move_speed * window.delta_time
     if glfw.get_key(window.window, glfw.KEY_D) == glfw.PRESS:
@@ -140,24 +155,24 @@ def render():
         hand_position.z += move_speed * window.delta_time
 
     if glfw.get_key(window.window, glfw.KEY_J) == glfw.PRESS:
-        hand_rotation.x += move_speed * window.delta_time
+        hand_rotation.x += rotate_speed * window.delta_time
     if glfw.get_key(window.window, glfw.KEY_L) == glfw.PRESS:
-        hand_rotation.x -= move_speed * window.delta_time
+        hand_rotation.x -= rotate_speed * window.delta_time
     if glfw.get_key(window.window, glfw.KEY_I) == glfw.PRESS:
-        hand_rotation.y += move_speed * window.delta_time
+        hand_rotation.y += rotate_speed * window.delta_time
     if glfw.get_key(window.window, glfw.KEY_K) == glfw.PRESS:
-        hand_rotation.y -= move_speed * window.delta_time
+        hand_rotation.y -= rotate_speed * window.delta_time
     if glfw.get_key(window.window, glfw.KEY_U) == glfw.PRESS:
-        hand_rotation.z += move_speed * window.delta_time
+        hand_rotation.z += rotate_speed * window.delta_time
     if glfw.get_key(window.window, glfw.KEY_O) == glfw.PRESS:
-        hand_rotation.z -= move_speed * window.delta_time
+        hand_rotation.z -= rotate_speed * window.delta_time
 
-    camera = data.couple_list[data.curindex]
+    cur_camera = data.couple_list[data.curindex]
     glViewport(0, 0, int(window.window_width / 2), window.window_height)
-    render_view(camera.left_camera, camera.left_camera_data)
+    render_view(cur_camera.left_camera, cur_camera.left_camera_data)
 
     glViewport(int(window.window_width / 2), 0, int(window.window_width / 2), window.window_height)
-    render_view(camera.right_camera, camera.right_camera_data)
+    render_view(cur_camera.right_camera, cur_camera.right_camera_data)
 
 
 def main_render():

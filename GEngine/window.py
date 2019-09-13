@@ -10,7 +10,7 @@ class GWindow:
         self.window_name = window_name
         self.window_width = window_width
         self.window_height = window_height
-        # self.io_process = i_process
+        # self.io_process = io_process
         self.camera = camera
         # self.io_process.set_window_size(window_width, window_height)
         self.delta_time = 0.0
