@@ -15,7 +15,7 @@ import data
 import ModelLoad
 import glfw
 
-SCR_WIDTH = int(1920 * 0.5) * 2
+SCR_WIDTH = int(1920 * 0.5)
 SCR_HEIGHT = int(1080 * 0.5)
 
 camera = Camera3D(glm.vec3(0.0, 0, 1000.0))
@@ -24,7 +24,7 @@ ortho_camera = Camera3D(glm.vec3(0, 0, 1000))
 bg_view = ortho_camera.get_view_matrix()
 
 # window = GWindow(b"demo", SCR_WIDTH, SCR_HEIGHT, InputProcess(Camera), keep_mouse_stay=False)
-window = GWindow("demo", SCR_WIDTH, SCR_HEIGHT, camera, keep_mouse_stay=False)
+window = GWindow("demo", SCR_WIDTH * 2, SCR_HEIGHT, camera, keep_mouse_stay=False)
 
 light_color = (1.0, 1.0, 1.0)
 hand_color = (1, 0, 0)
@@ -40,8 +40,6 @@ move_sub_speed = 500
 rotate_nor_speed = 90
 rotate_add_speed = 180
 rotate_sub_speed = 45
-
-img_size = (1920, 1080)
 
 data.init(r'resources\models\data.txt')
 
@@ -60,28 +58,30 @@ def init():
     hand_model = Model([v], vertex_format='VN')
     # hand_model = ModelFromExport("resources/models/hand.obj", vertex_format="VN")
 
-    glEnable(GL_DEPTH_TEST)
+    # glEnable(GL_DEPTH_TEST)
 
 
-def render_background_image(bg_model, window_width=1920 / 2, window_height=1080 / 2, camera_view=None):
-    glDisable(GL_DEPTH_TEST)
+def render_background_image(bg_model, window_width, window_height, camera_view=None, fx=1920):
+    # glDisable(GL_DEPTH_TEST)
     bg_shader_program.use()
     m = glm.mat4(1.0)
-    m = glm.scale(m, glm.vec3(2))
+    rescale = 45 / camera.zoom
+    m = glm.scale(m, glm.vec3(rescale))
+
+    FOV = 2 * glm.atan(1080 / 2 / fx)
+
+    projection = camera.get_projection(FOV, SCR_WIDTH, SCR_HEIGHT)
+    bg_ortho = glm.ortho(-SCR_WIDTH * 0.5, SCR_WIDTH * 0.5, -SCR_HEIGHT * 0.5, SCR_HEIGHT * 0.5, 0.3, 5000)
+
     bg_shader_program.set_matrix("model", glm.value_ptr(m))
 
     # view = camera.get_view_matrix()
     bg_shader_program.set_matrix("view", glm.value_ptr(bg_view))
 
-    rescale = camera.zoom / 45
-
-    projection = camera.get_projection(window_width, window_height)
-    bg_ortho = glm.ortho(-window_width * rescale, window_width * rescale, -window_height * rescale, window_height * rescale, 0.3, 5000)
-
     bg_shader_program.set_matrix("projection", glm.value_ptr(bg_ortho))
     bg_shader_program.un_use()
     bg_model.draw(bg_shader_program, draw_type=GL_TRIANGLES)
-    glEnable(GL_DEPTH_TEST)
+    # glEnable(GL_DEPTH_TEST)
 
     hand_shader_program.use()
     hand_shader_program.set_matrix("projection", glm.value_ptr(projection))
@@ -113,8 +113,9 @@ def render_view(cur_camera: data.Camera, cur_camera_data: data.CameraData):
 
     view = glm.mat4x4(*view[0], 0, *view[1], 0, *view[2], 0, -camera.position[0], -camera.position[1], -camera.position[2], 1)
     # print(view)
-    render_background_image(cur_camera.bg.Model, window_width=cur_camera.bg.window_size[0],
-                            window_height=cur_camera.bg.window_size[1], camera_view=view)
+    # render_background_image(cur_camera.bg.Model, window_width=cur_camera.bg.window_size[0],
+    #                         window_height=cur_camera.bg.window_size[1], camera_view=view)
+    render_background_image(cur_camera.bg.Model, window_width=1 / 2, window_height=1 / 2, camera_view=view, fx=cur_camera.bg.window_size[0])
     # render_side_view(left_camera_intrinsic, left_camera_extrinsic, window.window_width / 2, window.window_height,
     #                  stereo_left_index)
     if cur_camera.bg.flag:

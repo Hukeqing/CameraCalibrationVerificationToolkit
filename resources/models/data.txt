@@ -1,8 +1,8 @@
 % camera 1
-1712.767  1712.385 929.581  546.744 0
+1712.767 1712.385 929.581 546.744 0
 resources\images\leftCamera.png
 % camera 2
-1760.151  1752.823  936.817  523.941 0
+1760.151 1752.823 936.817 523.941 0
 resources\images\rightCamera.png
 $ camera 1
 -2.04  2.16  -0.09

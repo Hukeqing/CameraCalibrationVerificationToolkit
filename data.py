@@ -43,13 +43,15 @@ curindex = 0
 camera_list = dict()
 couple_list: List[check_couple] = list()
 
-img_size = (1920, 1080)
+m_imageScale = 0.5
+
+img_size = (1920 * m_imageScale, 1080 * m_imageScale)
 bg_size = np.array([-img_size[0] / 2, img_size[1] / 2, 0, 0, 1,
-               img_size[0] / 2, img_size[1] / 2, 0, 1, 1,
-               -img_size[0] / 2, -img_size[1] / 2, 0, 0, 0,
-               -img_size[0] / 2, -img_size[1] / 2, 0, 0, 0,
-               img_size[0] / 2, -img_size[1] / 2, 0, 1, 0,
-               img_size[0] / 2, img_size[1] / 2, 0, 1, 1, ], dtype=np.float32)
+                    img_size[0] / 2, img_size[1] / 2, 0, 1, 1,
+                    -img_size[0] / 2, -img_size[1] / 2, 0, 0, 0,
+                    -img_size[0] / 2, -img_size[1] / 2, 0, 0, 0,
+                    img_size[0] / 2, -img_size[1] / 2, 0, 1, 0,
+                    img_size[0] / 2, img_size[1] / 2, 0, 1, 1, ], dtype=np.float32)
 
 
 # left_camera.bg.Model = Model([bg], texture_path=[left_camera.bg.path])
@@ -70,7 +72,7 @@ def init(path=r'D:\PhotoCheck\pythonGUI\Source\2CameraParam.txt'):
         if item[0].split(' ')[0] == '%':
             bg_data = [float(i) for i in item[1].split(' ') if i.strip() != '']
             name: str = item[0].split(' ', 1)[1].strip()
-            bg = bg_model(item[2].strip(), window_size=(bg_data[0], bg_data[1]))
+            bg = bg_model(item[2].strip(), window_size=(bg_data[0], bg_data[1], bg_data[2], bg_data[3]))
             bg.Model = Model([bg_size], texture_path=[bg.path])
             cur_camera = Camera(name, bg=bg)
             camera_list[name] = cur_camera
