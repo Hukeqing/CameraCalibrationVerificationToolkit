@@ -30,7 +30,7 @@ class Camera3D:
         return glm.lookAt(self.position, self.position + self.front, self.world_up)
 
     def get_projection(self, FOV, window_width, window_height):
-        projection = glm.perspective(FOV, window_width / window_height, 0.3, 5000)
+        projection = glm.perspective(glm.radians(FOV), window_width / window_height, 0.3, 5000)
         # projection = glm.perspective(glm.radians(self.zoom), window_width / window_height, 0.3, 5000)
         return projection
 

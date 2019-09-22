@@ -68,9 +68,10 @@ def render_background_image(bg_model, window_width, window_height, camera_view=N
     rescale = 45 / camera.zoom
     m = glm.scale(m, glm.vec3(rescale))
 
-    FOV = 2 * glm.atan(1080 / 2 / fx)
+    fov = 2 * glm.atan(1080 / 2 / fx) / 3.14159 * 180
+    fov += camera.zoom - 45
 
-    projection = camera.get_projection(FOV, SCR_WIDTH, SCR_HEIGHT)
+    projection = camera.get_projection(fov, SCR_WIDTH, SCR_HEIGHT)
     bg_ortho = glm.ortho(-SCR_WIDTH * 0.5, SCR_WIDTH * 0.5, -SCR_HEIGHT * 0.5, SCR_HEIGHT * 0.5, 0.3, 5000)
 
     bg_shader_program.set_matrix("model", glm.value_ptr(m))
@@ -99,7 +100,9 @@ def render_background_image(bg_model, window_width, window_height, camera_view=N
     hand_shader_program.set_uniform_3f("handColor", hand_color)
     hand_shader_program.un_use()
 
+    glEnable(GL_CULL_FACE)
     hand_model.draw(hand_shader_program, draw_type=GL_TRIANGLES)
+    glDisable(GL_CULL_FACE)
 
 
 def render_view(cur_camera: data.Camera, cur_camera_data: data.CameraData):
@@ -141,7 +144,7 @@ def render():
     elif glfw.get_key(window.window, glfw.KEY_LEFT_SHIFT) == glfw.PRESS:
         move_speed = move_sub_speed
         rotate_speed = rotate_sub_speed
-
+    # hand move
     if glfw.get_key(window.window, glfw.KEY_A) == glfw.PRESS:
         hand_position.y += move_speed * window.delta_time
     if glfw.get_key(window.window, glfw.KEY_D) == glfw.PRESS:

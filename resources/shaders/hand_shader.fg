@@ -23,5 +23,5 @@ void main()
 
     vec3 result = (ambient + diffuse) * handColor;
 
-	FragColor = vec4(result, 0.3);
+	FragColor = vec4(result, 0.7);
 }
