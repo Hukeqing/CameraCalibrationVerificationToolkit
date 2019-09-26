@@ -61,7 +61,7 @@ def init():
     # glEnable(GL_DEPTH_TEST)
 
 
-def render_background_image(bg_model, window_width, window_height, camera_view=None, fx=1920):
+def render_background_image(bg_model, camera_view=None, fx=1920):
     # glDisable(GL_DEPTH_TEST)
     bg_shader_program.use()
     m = glm.mat4(1.0)
@@ -69,7 +69,7 @@ def render_background_image(bg_model, window_width, window_height, camera_view=N
     m = glm.scale(m, glm.vec3(rescale))
 
     fov = 2 * glm.atan(1080 / 2 / fx) / 3.14159 * 180
-    fov += camera.zoom - 45
+    fov *= camera.zoom / 45
 
     projection = camera.get_projection(fov, SCR_WIDTH, SCR_HEIGHT)
     bg_ortho = glm.ortho(-SCR_WIDTH * 0.5, SCR_WIDTH * 0.5, -SCR_HEIGHT * 0.5, SCR_HEIGHT * 0.5, 0.3, 5000)
@@ -118,7 +118,7 @@ def render_view(cur_camera: data.Camera, cur_camera_data: data.CameraData):
     # print(view)
     # render_background_image(cur_camera.bg.Model, window_width=cur_camera.bg.window_size[0],
     #                         window_height=cur_camera.bg.window_size[1], camera_view=view)
-    render_background_image(cur_camera.bg.Model, window_width=1 / 2, window_height=1 / 2, camera_view=view, fx=cur_camera.bg.window_size[0])
+    render_background_image(cur_camera.bg.Model, camera_view=view, fx=cur_camera.bg.window_size[0])
     # render_side_view(left_camera_intrinsic, left_camera_extrinsic, window.window_width / 2, window.window_height,
     #                  stereo_left_index)
     if cur_camera.bg.flag:
